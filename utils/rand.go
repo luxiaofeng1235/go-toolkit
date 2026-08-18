@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"github.com/mojocn/base64Captcha"
 	"go-novel/global"
 	"log"
 	"math"
@@ -10,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mojocn/base64Captcha"
 )
 
 // 返回随机字符串
@@ -55,14 +56,22 @@ func GetBookRandPosition(total int64) int {
 	return offsetNum
 }
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 // 生成唯一订单号
 func BuildOrderNo(prefix string) string {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	number := r.Intn(99999)
 	if prefix == "" {
 		prefix = "C"
 	}
-	return prefix + fmt.Sprintf("%05d", number) + time.Now().Format("20060102150405")
+	num := rand.Intn(100)
+	//r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	//number := r.Intn(99999)
+	//if prefix == "" {
+	//	prefix = "C"
+	//}
+	return prefix + fmt.Sprintf("%05d", num) + time.Now().Format("20060102150405")
 }
 
 // 生成指定范围的随机数
