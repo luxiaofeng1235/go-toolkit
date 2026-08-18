@@ -1,13 +1,33 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"go-novel/app/models"
 	"go-novel/app/service/api/comment_service"
 	"go-novel/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Comment struct{}
+
+func (Comment) FeedBackAdd11(c *gin.Context) {
+
+	var req models.CommentListReq
+	if err := c.ShouldBind(&req); err != nil {
+		utils.FailEncrypt(c, err, "参数绑定失败")
+		return
+	}
+	userId, ok := c.Get("userId")
+	if ok {
+		req.UserId = userId.(int64)
+	}
+	res, err := comment_service.GetCommentRes(&req)
+	if err != nil {
+		utils.FailEncrypt(c, err, "获取数据失败")
+		return
+	}
+	utils.SuccessEncrypt(c, res, "获取成功")
+}
 
 func (comment *Comment) List(c *gin.Context) {
 	var req models.CommentListReq
